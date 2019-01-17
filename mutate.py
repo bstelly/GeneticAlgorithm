@@ -4,10 +4,7 @@ def mutate(gene, rate):
     itr = 0
     for x in gene:
         if randint(0, 100) >= rate:
-            if x is '0':
-                gene[itr] = '1'
-            else:
-                gene[itr] = '0'
+            gene[itr] = '1' if x is '0' else '0'
         itr += 1
     return gene
 
