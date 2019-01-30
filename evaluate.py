@@ -1,3 +1,9 @@
+class Equation:
+    def __init__(self):
+        self.clauses = []
+        self.variables = []
+        self.variable_values = []
+
 clauses = []
 variables = []
 variable_values = []
@@ -19,10 +25,7 @@ for x in variables:
     value = input("Input value for " + x + ":   ")
     variable_values.append((x, value))
 
-i = 0
-current_clause = []
 clauses = equation.split("*")
-adding = False
 
 for x in variable_values:
     equation = equation.replace(x[0], x[1])
