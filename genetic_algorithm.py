@@ -1,3 +1,5 @@
+from random import randint
+
 class GeneticAlgorithm:
     def __init__(self):
         self.equation = ''
@@ -6,8 +8,13 @@ class GeneticAlgorithm:
 
     def initialize_population(self, size):
         for x in range(0, size):
-            
+            solution = ''
+            for x in range(0, len(self.equation.variables)):
+                solution.append(randint(0, 1))
 
+            self.population.append(Gene(solution))
+            
+        
 
     def run(self):
         #set time   t = 0
@@ -22,6 +29,8 @@ class GeneticAlgorithm:
             #end
         #end
         time = 0
+        initialize_population(15)
+
 
 
 class Equation:
@@ -32,15 +41,17 @@ class Equation:
 
 
 class Gene:
-    def __init__(self, solution, fitness):
+    def __init__(self, solution):
         self.solution = solution
-        self.fitness = fitness
+        self.fitness = 0
         
     def calc_fitness(self, equation):
+        eq = equation
+        #Main equation should not be changed
         self.fitness = 0
         count = 0
 
-        for x in equation.clauses:
-            for y in variable_values:
-                equation = equation.replace(x[0], x[1])
+        for x in eq.clauses:
+            for y in eq.variables:
+                eq = eq.replace(x[0], x[1])
             
