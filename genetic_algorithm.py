@@ -29,7 +29,7 @@ class GeneticAlgorithm:
             partial_sum = 0
             for x in self.population:
                 partial_sum += x.fitness
-                if partial_sum > number:
+                if partial_sum >= number:
                     if parent_one is None:
                         parent_one = x
                     else:
@@ -70,9 +70,8 @@ class GeneticAlgorithm:
             if randint(0, 100) <= rate:
                  gene_two[itr]= '1' if x is '0' else '0'
             itr += 1
-        parents[0].solution = parents[0].solution.join(gene_one)
-        parents[1].solution = parents[1].solution.join(gene_two)
-
+        parents[0].solution = ''.join(str(x) for x in gene_one)
+        parents[1].solution = ''.join(str(y) for y in gene_two)
 
         
             
@@ -154,3 +153,4 @@ class Gene:
 
 algorithm = GeneticAlgorithm()
 algorithm.run()
+
