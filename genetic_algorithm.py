@@ -2,11 +2,13 @@ from random import randint
 import copy
 
 class GeneticAlgorithm:
+    #initialize the GeneticAlgorithm class
     def __init__(self):
         self.equation = Equation()
         self.population = []
         self.current_solution = None
 
+    #fill the population list with genes. The genes each have a random solution
     def initialize_population(self, size):
         for x in range(0, size):
             solution = ''
@@ -15,6 +17,7 @@ class GeneticAlgorithm:
 
             self.population.append(Gene(solution))
             
+    #select two parent genes by using roulette wheel selection
     def fitness_selection(self):
         parent_one = None
         parent_two = None
@@ -37,6 +40,8 @@ class GeneticAlgorithm:
                     break
         return (parent_one, parent_two)
 
+    #A genetic operator that allows two parents to create "children" by combining
+    #genetic information
     def crossover(self, parents, pivot):
         offspring_one = ""
         offspring_two = ""
@@ -54,6 +59,9 @@ class GeneticAlgorithm:
         parents[0].solution = offspring_one
         parents[1].solution = offspring_two
 
+    #A genetic operator that helps to maintain genetic diversity by rolling a random
+    #number from one to 100 for each bit in both parent's solutions.
+    #if the number is less than the rate, then that bit will become a 1 if 0 or a 0 if 1
     def mutate(self, parents, rate):
         gene_one = list(parents[0].solution)
         gene_two = list(parents[1].solution)
@@ -73,6 +81,8 @@ class GeneticAlgorithm:
         parents[0].solution = ''.join(str(x) for x in gene_one)
         parents[1].solution = ''.join(str(y) for y in gene_two)
 
+    #checks to see if any genes in the population contain a solution that satisfies
+    #the expression
     def check_for_solution(self):
         for x in self.population:
             eq = copy.deepcopy(self.equation)
@@ -84,7 +94,7 @@ class GeneticAlgorithm:
                 self.current_solution = x
                 break
 
-
+    #runs the genetic algorithm
     def run(self):
         self.equation.load_file('equation.txt')
         self.equation.find_variables()
@@ -92,7 +102,7 @@ class GeneticAlgorithm:
         #initialize population
         self.initialize_population(5)
         
-        #while termination condition is not met, do
+        #while termination condition is not met continue looping
         while self.current_solution is None:
             #evaluate the fitness of each gene
             for gene in self.population:
@@ -114,15 +124,18 @@ class GeneticAlgorithm:
 
 
 class Equation:
+    #initialize the Equation class
     def __init__(self):
         self.problem = ''
         self.variables = []
 
+    #takes in a string for the file name and loads the contents into a member variable
     def load_file(self, filename):
         with open(filename, 'r') as myFile:
             self.problem = myFile.read()
         myFile.close()
 
+    #finds every unique literal in the expression
     def find_variables(self):
         for x in self.problem:
             if x is not ' ' and x is not '(' and x is not ')' and x is not '!' and x is not '*' and x is not '+':
@@ -130,6 +143,7 @@ class Equation:
                     self.variables.append(x)
         self.variables.sort()
 
+    #replaces operators in the expression, with python logical operators
     def replace_symbols(self):
         self.problem = self.problem.replace("!", str("not "))
         self.problem = self.problem.replace("+", str("or"))
@@ -138,10 +152,13 @@ class Equation:
 
 
 class Gene:
+    #initializes the Gene class
     def __init__(self, solution):
         self.solution = solution
         self.fitness = 0
         
+    #calculates the fitness of a gene by checking how many of the expressions
+    #clauses are evaluated to true using the gene's solution
     def calc_fitness(self, equation):
         self.fitness = 0
         eq = copy.deepcopy(equation)
@@ -158,7 +175,6 @@ class Gene:
                 count += 1
         self.fitness = count
             
-
 
 algorithm = GeneticAlgorithm()
 solution = algorithm.run()
