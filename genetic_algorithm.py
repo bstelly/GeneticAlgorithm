@@ -5,7 +5,7 @@ class GeneticAlgorithm:
     def __init__(self):
         self.equation = Equation()
         self.population = []
-        self.time = 0
+        self.current_solution = None
 
     def initialize_population(self, size):
         for x in range(0, size):
@@ -73,21 +73,27 @@ class GeneticAlgorithm:
         parents[0].solution = ''.join(str(x) for x in gene_one)
         parents[1].solution = ''.join(str(y) for y in gene_two)
 
-        
-            
-                
+    def check_for_solution(self):
+        for x in self.population:
+            eq = copy.deepcopy(self.equation)
+            for i in range(0, len(eq.variables)):
+                eq.problem = eq.problem.replace(eq.variables[i], x.solution[i])
+            eq.replace_symbols()
+            evaluation = eval(eq.problem)
+            if eval(eq.problem) is True or eval(eq.problem) is 1:
+                self.current_solution = x
+                break
+
 
     def run(self):
         self.equation.load_file('equation.txt')
         self.equation.find_variables()
 
-        #set time t = 0
-        self.time = 0
         #initialize population
         self.initialize_population(5)
         
         #while termination condition is not met, do
-        while self.time != 5:
+        while self.current_solution is None:
             #evaluate the fitness of each gene
             for gene in self.population:
                 gene.calc_fitness(self.equation)
@@ -98,9 +104,12 @@ class GeneticAlgorithm:
             #produce the offspring of these pairs using genetic operators
             self.crossover(parents, (len(self.population[0].solution) * .5))
             self.mutate(parents, 20)
-            self.time += 1
-            
 
+            #check to see if a solution is found. If one is found, the algorithm will stop running
+            self.check_for_solution()
+
+        print(self.current_solution.solution)
+            
         
 
 
@@ -152,5 +161,5 @@ class Gene:
 
 
 algorithm = GeneticAlgorithm()
-algorithm.run()
+solution = algorithm.run()
 
