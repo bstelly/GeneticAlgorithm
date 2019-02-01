@@ -19,3 +19,5 @@ a = "111111"
 b = "000000"
 offsprings = cross(a, b, 3)
 offsprings
+
+
